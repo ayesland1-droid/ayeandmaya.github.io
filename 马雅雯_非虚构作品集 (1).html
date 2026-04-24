@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>马雅雯 · 非虚构</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --moss: #4a6741;
+    --moss-deep: #344e2d;
+    --moss-pale: #eef2ec;
+    --moss-mid: #8fa882;
+    --ink: #1c1c1c;
+    --gray: #6e6e6e;
+    --line: #c5cec3;
+    --cream: #f8f6f1;
+    --page: #fdfcf9;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 300;
+    line-height: 1.9;
+    font-size: 15px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 48px;
+    background: rgba(253,252,249,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-brand {
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    color: var(--moss-deep);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--gray);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--moss); }
+
+  /* ── COVER ── */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 70%, rgba(74,103,65,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 30%, rgba(74,103,65,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cover-label {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--moss);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+  .cover-name {
+    font-size: clamp(52px, 8vw, 88px);
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+  .cover-en {
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--moss-mid);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+  .cover-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--moss);
+    margin: 0 auto 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.7s forwards;
+  }
+  .cover-desc {
+    font-size: 13px;
+    color: var(--gray);
+    letter-spacing: 0.1em;
+    line-height: 2.2;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+  .cover-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--moss-mid);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.2s forwards;
+  }
+  .cover-scroll::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 30px;
+    background: var(--moss-mid);
+    margin: 10px auto 0;
+    animation: lineGrow 1.5s ease 1.5s infinite;
+  }
+
+  /* ── TOC ── */
+  .toc-section {
+    padding: 80px 48px;
+    max-width: 800px;
+    margin: 0 auto;
+    border-top: 1px solid var(--line);
+  }
+  .section-tag {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--moss);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    color: inherit;
+  }
+  .toc-item:hover .toc-title { color: var(--moss); }
+  .toc-num {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--moss-mid);
+    min-width: 28px;
+  }
+  .toc-title {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--ink);
+    flex: 1;
+    transition: color 0.3s;
+    letter-spacing: 0.05em;
+  }
+  .toc-sub {
+    font-size: 11px;
+    color: var(--gray);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── CONTENT PAGES ── */
+  .piece {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 100px 48px;
+    border-top: 1px solid var(--line);
+  }
+
+  .piece-header {
+    margin-bottom: 64px;
+  }
+  .piece-tag {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--moss);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 20px;
+  }
+  .piece-title {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 300;
+    line-height: 1.3;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .piece-title-en {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--moss-mid);
+    text-transform: uppercase;
+    font-family: 'Noto Sans SC', sans-serif;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .body-text {
+    font-size: 15px;
+    line-height: 2.1;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+  }
+  .body-text p {
+    margin-bottom: 1.8em;
+  }
+  .body-text p:last-child { margin-bottom: 0; }
+
+  /* chapter heads */
+  .chapter {
+    margin: 56px 0 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .chapter-num {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--moss);
+    font-family: 'Noto Sans SC', sans-serif;
+  }
+  .chapter-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+  }
+  .chapter-line {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* pull quote */
+  .pull-quote {
+    margin: 48px 0;
+    padding: 32px 32px 32px 24px;
+    border-left: 2px solid var(--moss);
+    background: var(--moss-pale);
+  }
+  .pull-quote p {
+    font-size: 16px;
+    line-height: 2;
+    color: var(--moss-deep);
+    letter-spacing: 0.06em;
+    font-weight: 400;
+    margin: 0;
+  }
+
+  /* inline quote (speech) */
+  .speech {
+    color: var(--gray);
+    font-style: normal;
+  }
+
+  /* year stamp */
+  .year-stamp {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--moss);
+    border: 1px solid var(--moss);
+    padding: 4px 12px;
+    margin-bottom: 16px;
+    font-family: 'Noto Sans SC', sans-serif;
+  }
+
+  /* person intro block */
+  .person-block {
+    margin: 40px 0;
+    padding: 28px;
+    border: 1px solid var(--line);
+    background: var(--cream);
+  }
+  .person-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--moss-deep);
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+  .person-desc {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+  }
+
+  /* closing ornament */
+  .piece-end {
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .piece-end-dot {
+    width: 5px;
+    height: 5px;
+    background: var(--moss);
+    border-radius: 50%;
+  }
+  .piece-end-text {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--moss-mid);
+    text-transform: uppercase;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 48px;
+    text-align: center;
+  }
+  footer p {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--gray);
+    line-height: 2;
+  }
+  .footer-name {
+    font-size: 13px;
+    color: var(--moss-deep);
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    margin-bottom: 8px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes lineGrow {
+    0%   { opacity: 0; transform: scaleY(0); transform-origin: top; }
+    40%  { opacity: 1; transform: scaleY(1); }
+    100% { opacity: 0; transform: scaleY(1); }
+  }
+
+  /* scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .cover { padding: 100px 24px 60px; }
+    .toc-section, .piece { padding-left: 24px; padding-right: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">马雅雯 · 非虚构</div>
+  <ul class="nav-links">
+    <li><a href="#intro">自我介绍</a></li>
+    <li><a href="#work">非虚构作品</a></li>
+  </ul>
+</nav>
+
+<!-- COVER -->
+<section class="cover">
+  <div class="cover-label">非虚构 · Nonfiction</div>
+  <h1 class="cover-name">马雅雯</h1>
+  <div class="cover-en">Ma Yawen</div>
+  <div class="cover-divider"></div>
+  <p class="cover-desc">
+    文学 · 新传复合背景
+  </p>
+  <div class="cover-scroll">向下滚动</div>
+</section>
+
+<!-- TOC -->
+<section class="toc-section reveal">
+  <div class="section-tag">目录 · Contents</div>
+  <a class="toc-item" href="#intro">
+    <span class="toc-num">01</span>
+    <span class="toc-title">非虚构自我介绍</span>
+    <span class="toc-sub">关于爷爷与羁绊</span>
+  </a>
+  <a class="toc-item" href="#work">
+    <span class="toc-num">02</span>
+    <span class="toc-title">人生是轨道，但是可以出轨</span>
+    <span class="toc-sub">三位女性的旷野选择</span>
+  </a>
+</section>
+
+<!-- PIECE 01: 自我介绍 -->
+<article class="piece" id="intro">
+  <header class="piece-header reveal">
+    <span class="piece-tag">01 · 非虚构自我介绍</span>
+    <h2 class="piece-title">关于我，<br>以及一些遥远而细碎的事情</h2>
+    <div class="piece-title-en">A Nonfiction Self-Introduction</div>
+  </header>
+
+  <div class="body-text">
+
+    <p class="reveal">我一直以来都在套市场上通用的虚构版本。以非虚构的方式自我介绍，第一次写，因而需要仔细地理一理，认真厘清自己到底是个啥。</p>
+
+    <p class="reveal">网上说童年对人性格的养成十分重要，网上还说正常人一般3—6岁时开始有记忆力。这么说来，我仅靠自己，没办法厘清我现在这种性格从何而来。</p>
+
+    <p class="reveal">所以我没太弄清楚，只捡拾了一些遥远的、细碎的，但或许对现在的我有那么一丝影响的事情。这些事情集中与一个人有关——一个总在红色桌子上工作、手持听诊器、身上散发着中药味儿、总对着人体构造图指指点点的人。</p>
+
+    <div class="reveal">
+      <div class="year-stamp">2007</div>
+      <p>我7岁，那年的我，第一次面对死亡。出发去上书法课之前，他们告诉我，爷爷死了，书法课我们不用去上了。</p>
+    </div>
+
+    <p class="reveal">他离开之后不知道多久，药房墙上泛黄的人体构造图被撕掉了，红色木头桌子上鲜少出现听诊器、针管、字迹潦草的诊单这类东西了。但我对他的记忆，在旁人的口述中有增无减。</p>
+
+    <div class="reveal">
+      <div class="year-stamp">2004 — 2005</div>
+      <p>我随他去开会，会议室在疾控中心的二楼。会前，我们坐在离门最近的位置，看着前来开会的人鱼贯而入。等我手里的零食吃完了，会也进行了一半了。但作为一个已经在幼儿园上过课的人，我知道这种场合不可以任由我吵闹——于是我拽着他，让他的视线穿过门、透过窗，看到不远处的书店，那里有我喜欢的故事书。会议还没结束，我便收获了《皮皮鲁和鲁西西》系列丛书中的某一本。我想，这应该是我学会在秩序中适度冲撞的开始。</p>
+    </div>
+
+    <div class="pull-quote reveal">
+      <p>他们说，他对我过分溺爱，甚至有时要通过"拉踩"亲戚家其他同辈小孩的方式来鼓励我——因而小时候的我总是洋洋得意、偶尔盲目自信，有时口无遮拦。</p>
+    </div>
+
+    <p class="reveal">随便给才见过几次面的长辈取外号、用笔在药房墙上的人体构造图上胡写乱画，以至于多年之后在春节的饭桌上总被大家反复提及。但好在大多数人都不惯着我，在吃遍苦头后，我还是长成了一个收放不那么自如、但至少懂得收放的人。</p>
+
+    <div class="reveal">
+      <div class="year-stamp">2018 · 夏</div>
+      <p>高速路上，广播里在评价世界杯德国队的表现，我没什么兴致。半梦半醒间突然听到长辈们又谈起他，说他即使生病之后也不忌口，更不控制饮食，被人劝阻时，还躺在病床上宣扬他痛快吃喝痛快活的人生观。我当时意识混沌，略过生与死，从中撷取了重要信息：吃。并从此找到了自己天塌下来都能好好吃饭的缘由。</p>
+    </div>
+
+    <p class="reveal">去年夏天，我在家中翻找东西时无意间翻出他的旧书——一本四书解说和一本中医书。那书的颜色和墙上的人体构造图一样蜡黄。我随手翻开一页，书的角落随着折痕轻轻碎成粉末。恍惚之间，我竟觉得那粉末就像他对我的影响一样，影影绰绰，板上钉钉。</p>
+
+    <p class="reveal">我当下没办法想到更多的事情了，况且自我介绍这个东西，若是要细究，恐怕是没有穷尽的。但如此一回溯，我发现羁绊真是个好东西——它充斥着爱、依赖与牵制，这些东西让我不断同他人产生新的羁绊，让我成为现在的我。</p>
+
+    <div class="pull-quote reveal">
+      <p>在这场最初与爷爷的羁绊中，我习得了不带规训的爱，不诉诸眼泪的依赖，也在一场又一场的羁绊中，将牵制我的那根缰绳，从他的手中拿回自己的手里。</p>
+    </div>
+
+  </div>
+
+  <div class="piece-end reveal">
+    <div class="piece-end-dot"></div>
+    <span class="piece-end-text">非虚构自我介绍 · 完</span>
+  </div>
+</article>
+
+<!-- PIECE 02: 非虚构作品 -->
+<article class="piece" id="work">
+  <header class="piece-header reveal">
+    <span class="piece-tag">02 · 非虚构作品</span>
+    <h2 class="piece-title">人生是轨道，<br>但是可以出轨</h2>
+    <div class="piece-title-en">Life Is a Track, But You Can Derail</div>
+  </header>
+
+  <div class="body-text">
+
+    <p class="reveal">上周，我给一位很久不联系的大学同学发去消息，邀请她做我的访谈对象。"裸辞"、"逆社会时钟"、"数字游民"，她的标签在我看来是这篇文章完美的受访者，我说你的故事如果能好好讲出来一定会非常精彩，她顿了顿随即告诉我：</p>
+
+    <div class="pull-quote reveal">
+      <p>"不要对我的生活有过高的期待。"</p>
+    </div>
+
+    <p class="reveal">在采访中，我对每一个人都提了同一个问题：<span class="speech">"你认为人生是轨道还是旷野？"</span>不出意外，答案五花八门，其张力和想象力比旷野还要"野"。</p>
+
+    <p class="reveal">而对于这个问题，作家余华说：<span class="speech">"没有'轨道'，到不了'旷野'。要先找到'旷野'，才可以离开'轨道'。"</span>在"轨道"之中运行的我和身处各片"旷野"中的朋友们大聊特聊，谈论各自生活之中的流动，在一些恰当的时刻保持沉默，给彼此的情绪留些空间。在一同畅想了无数未来在旷野中疾驰的自由时刻后，朋友突然终止了对话。</p>
+
+    <p class="reveal"><span class="speech">"我要去背单词打卡了，连胜记录可不能断。"</span></p>
+
+    <p class="reveal">于是我随即回到轨道中，开始写这篇文章，以维持轨道的正常运行。</p>
+
+    <!-- 人物介绍 -->
+    <div class="chapter reveal">
+      <span class="chapter-num">一</span>
+      <span class="chapter-title">一个路口，三条轨道</span>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="person-block reveal">
+      <div class="person-name">蘑菇 &amp; 企鹅</div>
+      <div class="person-desc">大学同班好友，曾决定放弃考研做雅思助教，后相继离职，目前正在 gap，备考港硕。</div>
+    </div>
+
+    <div class="person-block reveal">
+      <div class="person-name">叶子</div>
+      <div class="person-desc">同班大姐姐，23岁重返校园，大学期间经济独立，毕业后辗转直播、电商行业，后辞职去大理旅居，现为数字游民。</div>
+    </div>
+
+    <p class="reveal">蘑菇和企鹅是我大学期间玩得很好的朋友，她们住在我斜对面的宿舍，和我不同专业但总是一起吃饭一起上课。大四上学期返校第一周，两人突然来找我，说她们决定不考研了，刚卖掉了院校的参考书，下周去一所国际学校报道，去做雅思助教。</p>
+
+    <p class="reveal">也是大四上学期，叶子发来微信让我去她的宿舍挑一些鲜花：<span class="speech">"刚签了一家直播公司，去做带货主播，也没空料理我这些花儿了，现在抓紧收拾收拾行李，明天就走，公司给我找了套房子。"</span></p>
+
+    <p class="reveal">彼时的我正埋头考研，认为眼下的生活在食堂二楼的麻辣烫店里，而前方的路在目标院校的考纲里。</p>
+
+    <p class="reveal">如今看来，吃饭真是日常生活中的大事。三种不同的人生选择，你单从我们吃饭的状态中，便能窥得一二了。</p>
+
+    <p class="reveal">在同一个站点停靠了四年后，我们各自踏上了新的征程。人生并非处处是坦途，轨道也不会一直通往目的地——于是我们这些人有人中途跳车、有人掀翻轨道，但无一例外，都成为了我的采访对象，出现在这篇文章里。</p>
+
+    <!-- 蘑菇 -->
+    <div class="chapter reveal">
+      <span class="chapter-num">二</span>
+      <span class="chapter-title">人生是轨道，但是可以出轨</span>
+      <div class="chapter-line"></div>
+    </div>
+
+    <p class="reveal"><span class="speech">"人生是轨道，但是可以出轨。"</span>当蘑菇一本正经地说出这句话时，我心里乐开了花——"这简直是我文章完美的小标题。"但她却认真跟我说：<span class="speech">"我现在爬山、骑车、跑步、打球，充满了干劲儿，我真没想到到现在还能过上我大一、大二时那种天天滑板的生活。"</span></p>
+
+    <p class="reveal">蘑菇毕业后留在实习的学校做助教，工作几个月后，复杂的人际关系与无休止的加班让她身心俱疲。在很多"规劝"下，她决心辞职回家，但在新单位待了不到一周后，她再次选择了离开。</p>
+
+    <p class="reveal"><span class="speech">"本来不打算 gap 的，但是工作实在是太难找了，他们的要求会非常高，但工资又特别特别低，低得离谱。"</span></p>
+
+    <p class="reveal">今年四月，我们见了一次面，在街边休息时，她拿出手机一边进行单词打卡一边告诉我：<span class="speech">"我决定去申港硕了，现在在学雅思。"</span></p>
+
+    <p class="reveal">蘑菇在我的印象中是风风火火的人，大学期间每天晚饭后准时拎着滑板出现在食堂门口，来去轻巧，自在如风。但 gap 期间不一样了：<span class="speech">"其实焦虑占更多数，因为周边所有的人的生活全部都是有规划的，他们该上学上学，该上班上班，只有你每天待在家里——你自己心里会更加不开心，所以很容易焦虑。"</span></p>
+
+    <p class="reveal">四月份时，我带她去了板仔聚集的地方。我问她最近还滑吗？她翻开相册向我展示她那块板的现状：一个挂在墙上，能摆放一些小物件的装饰品。<span class="speech">"还是被上班侵蚀了，再也回不到即使摔断脚还能乐呵地坐在旁边看别人做新动作的时候了。"</span></p>
+
+    <div class="pull-quote reveal">
+      <p>"管不了那么多了，我自己开心最重要。"</p>
+      <p style="margin-top:12px; font-size:13px; color:var(--moss);">— 蘑菇</p>
+    </div>
+
+    <p class="reveal">在这段名为"gap year"的日子里，蘑菇似乎迈出了对她而言最重要的一步：了解自己、认清自己、接纳自己，同时也屏蔽自己。按照大众熟知的爽文叙事，熟人社会附上的茧都会被女主一层层撕破，但蘑菇没有，她有自己的逻辑：<span class="speech">"你要想跟我玩那我们就一块玩，不想跟我玩也好，但是不可以来找我说教，来找我说教的，都统统视为羡慕我。"</span></p>
+
+    <!-- 企鹅 -->
+    <div class="chapter reveal">
+      <span class="chapter-num">三</span>
+      <span class="chapter-title">子非鱼，安知鱼之乐</span>
+      <div class="chapter-line"></div>
+    </div>
+
+    <p class="reveal">企鹅毕业后和蘑菇一起留在了实习单位，因为公司老板没有兑现入职承诺，她便辞职，回到深圳，先后在物业公司、英语教培机构工作，今年四月，她和蘑菇决定一起停下来，去考雅思、申港硕。</p>
+
+    <p class="reveal">在物业公司工作期间，她突然给我打来电话说这几天休假，邀请我去她那玩。来机场接我时，她带了一束花——毕业离校她送我去机场时，也送了我一束花。花败花又开，但送花的这个人，在当时的我看来，没什么太大的变化。但很显然，我对花还是所知甚少。</p>
+
+    <p class="reveal">我从北方的冬天过去，在树影婆娑、风影摇曳的午后边撸猫边听她讲近来的生活。但她跟我说：<span class="speech">"我很久都不在这个房间睡了，最近情绪上有些问题，不太适应一个人睡觉。"</span></p>
+
+    <p class="reveal"><span class="speech">"这个行业本质是服务业，但我的社会化程度又不是很高，有段时间我为了锻炼社交能力，每天出小区、回小区的都要抓着保安聊很久的天，没话找话聊。"</span></p>
+
+    <p class="reveal">她还说了很多，但我没太能听进去。不设身处地经历对方的生活，是无法切身体会到他人的愁与苦的。用企鹅的话来说，归根到底，这还是"子非鱼"的问题。</p>
+
+    <p class="reveal"><span class="speech">"gap 这个事情真的因人而异，一定要有自己的想法，一定要有一个自己想做的事情，不能完全漫无目的。子非鱼焉知鱼之乐啊朋友们！反之亦然啊朋友们！"</span></p>
+
+    <!-- 叶子 -->
+    <div class="chapter reveal">
+      <span class="chapter-num">四</span>
+      <span class="chapter-title">纪录片摄制组邀请我去摆摊，我拒绝了</span>
+      <div class="chapter-line"></div>
+    </div>
+
+    <p class="reveal">叶子是我执行力最强的朋友。在大三的一次班级活动中，她坐在我旁边把手机递来说：<span class="speech">"我准备去地铁口摆摊儿了，卖耳环，你来帮我选选品。"</span>活动结束后，陈列架、补光灯以及第一批货品，已经出现在她手机"待发货"那一栏中了。</p>
+
+    <p class="reveal">她长我几岁，那时的我总在想，再过几年，我会不会也变成像她一样雷厉风行，勇敢果断，但永远、永远会为一束鲜花驻足的女人。几年过去了，我没能成为那样的人，至于她，她直接跑到鲜花堆里生活了。</p>
+
+    <p class="reveal"><span class="speech">"我第一次去云南的时候非常震惊，这里的物价非常便宜——在杭州 2500 块钱只能租一个单间，但是在大理就可以租一个院子。"</span></p>
+
+    <p class="reveal">被电商行业搞得精神压力太大后，她索性辞职去大理生活。刚来的那半个月非常高兴，但手里的积蓄花出去后开始焦虑了，<span class="speech">"但那个时候还是有一种莫名其妙的自信，觉得凭借自己在电商行业的积累，一定能把自己的自媒体账号做起来。"</span></p>
+
+    <p class="reveal"><span class="speech">"但到现在自媒体账号也没起来哈。"</span>叶子在电话那头边说边笑，<span class="speech">"但没关系，我摆摊摆起来了，也算是做成了一件事儿，挺好的。"</span></p>
+
+    <div class="pull-quote reveal">
+      <p>"旅居真的让我变平和了，要是放在以前，我早就开始焦虑了，现在情绪变稳定了，也不再那么悲观了。"</p>
+      <p style="margin-top:12px; font-size:13px; color:var(--moss);">— 叶子</p>
+    </div>
+
+    <p class="reveal">去年她在新疆呆了两个月，在那里过了古尔邦节，给当地的小朋友们拍了很多照片，照片里他们直视镜头、肆意大笑，年轻的面庞和年轻的心一样新鲜。人与人之间有过这样的时刻就已经很好了，何必在乎什么短暂相遇又分离呢？</p>
+
+    <p class="reveal"><span class="speech">"你在裸辞或者旅居之前，一定要评估一下自己的情况，钱的事情需要考虑，没有钱，你是不可能有旷野的；心理承受能力和社交能力你需要衡量，有很多意想不到的事情等着你去面对；心野掉了，人真的就上不进去班了……"</span></p>
+
+    <!-- 结尾 -->
+    <div class="chapter reveal">
+      <span class="chapter-num">尾</span>
+      <span class="chapter-title">来不及了，我们要去跳舞</span>
+      <div class="chapter-line"></div>
+    </div>
+
+    <p class="reveal">文章写到这里，我突然想起访谈开始时叶子说的那句话，"不要对我的生活有过高的期待。"</p>
+
+    <p class="reveal">毕业后我们没再见过面，但和蘑菇、企鹅的再相逢让我学会了不再过分美化别人的生活和自己没走的那条路。四月见面时，我们关灯卧谈，又袒露又隐秘地交换各自人生的背面。</p>
+
+    <div class="pull-quote reveal">
+      <p>"当我看不见你生活的全部时，我也看不清你的难捱与伤悲。"</p>
+    </div>
+
+    <p class="reveal">最初这篇文章只想写写"gap year"的故事，但写到现在，不论是"gap year"、"裸辞"、"逆社会时钟"，写来写去或许是选择的问题，又或许归根结底还是自己与这个世界关系的问题。</p>
+
+    <p class="reveal">在与叶子不见面的这些时间，我只看到了与她相伴的山川湖海与花香鸟语，但她人生那些无解的时刻，我从未关心过。直到这次访谈，才试图在她闲云野鹤的生活中找那么一些苦痛，理所应当地觉得旷野天然就是让人奔跑的，而自由奔跑是不会摔倒在地的。</p>
+
+    <p class="reveal">后来我又找蘑菇和企鹅一起做了一次采访，电话那头十分嘈杂，她们在前往日韩的游轮上急匆匆回答了我的问题：</p>
+
+    <div class="pull-quote reveal">
+      <p>"来不及了，我们要出门跳舞了！"</p>
+    </div>
+
+    <p class="reveal">那天没听见游轮外的风声和海浪声，却好似看见了屏幕那头的雀跃。</p>
+
+  </div>
+
+  <div class="piece-end reveal">
+    <div class="piece-end-dot"></div>
+    <span class="piece-end-text">非虚构作品 · 完</span>
+  </div>
+</article>
+
+<!-- FOOTER -->
+<footer class="reveal">
+  <p class="footer-name">马雅雯</p>
+  <p>13546484881 · 13546484881@163.com</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
